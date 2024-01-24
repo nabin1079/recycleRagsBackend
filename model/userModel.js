@@ -9,10 +9,9 @@ const userSchema=new Schema({
         unique: true,
         lowercase: true
     },
-    userName:{
+    userFullName:{
         type: String,
-        required : [true,'Username must be provided'],
-        unique: true
+        required : [true,'FullName must be provided']
     },
     userPhoneNumber:{
         type: Number,
@@ -30,6 +29,10 @@ role:{
 },
 otp:{
     type: Number,
+    // select: false
+},
+userLocation:{
+    type: String,
     // select: false
 },
 isOtpVerified:{

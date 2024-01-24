@@ -20,10 +20,10 @@ exports.getMyProfile = async(req,res)=>{
 //update my profile
 
 exports.updateMyProfile = async(req,res)=>{
-    const {userName,userEmail,userPhoneNumber} = req.body 
+    const {userFullName,userEmail,userPhoneNumber,userLocation} = req.body 
     const userId = req.user.id 
     // update profile 
-  const updatedData =   await User.findByIdAndUpdate(userId,{userName,userEmail,userPhoneNumber},{
+  const updatedData =   await User.findByIdAndUpdate(userId,{userFullName,userEmail,userPhoneNumber,userLocation},{
         runValidators : true,
         new : true 
     })

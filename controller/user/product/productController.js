@@ -10,8 +10,8 @@ exports.createProduct = async (req,res)=>{
     }else{
         filePath=req.file.filename
     }
-    const{productName,productDescription,productPrice,productStatus,productStockQty}=req.body
-    if(!productName||!productDescription||!productPrice||!productStatus||!productStockQty){
+    const{productName,productDescription,productBoughtPrice,productSellingPrice,productStatus,productStockQty}=req.body
+    if(!productName||!productDescription||!productBoughtPrice||!productSellingPrice||!productStatus||!productStockQty){
         return res.status(400).json({
             message: "please provide productName,productDescription,productPrice,productStatus,productStockQty"
         })
@@ -20,7 +20,8 @@ exports.createProduct = async (req,res)=>{
     await Product.create({
 productName,
 productDescription,
-productPrice,
+productBoughtPrice,
+productSellingPrice,
 productStatus,
 productStockQty,
 productImage : process.env.BACKEND_URL + filePath,
@@ -78,7 +79,7 @@ exports.deleteProduct =  async(req,res)=>{
 
 const userId = req.user.id
 const product = await Product.findById(id)
-const owner= product.user
+const owner = product.user
 
 // console.log(owner,userId,product)
 if (owner!=userId){
@@ -131,8 +132,8 @@ message: "you don't have permission"
 exports.editProduct = async(req,res)=>{
 
     const {id} = req.params 
-      const {productName,productDescription,productPrice,productStatus,productStockQty} = req.body
-      if(!productName || !productDescription || !productPrice || !productStatus || !productStockQty || !id){
+      const {productName,productDescription,productBoughtPrice,productSellingPrice,productStatus,productStockQty} = req.body
+      if(!productName || !productDescription || !productBoughtPrice||!productSellingPrice || !productStatus || !productStockQty || !id){
         return res.status(400).json({
             message : "Please provide productName,productDescription,productPrice,productStatus,productStockQty,id"
         })
@@ -163,7 +164,8 @@ exports.editProduct = async(req,res)=>{
    const datas =  await Product.findByIdAndUpdate(id,{
         productName ,
         productDescription ,
-        productPrice,
+        productBoughtPrice,
+        productSellingPrice,
         productStatus,
         productStockQty,
         productImage : req.file && req.file.filename ? process.env.BACKEND_URL +  req.file.filename :  oldProductImage
