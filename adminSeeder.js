@@ -5,13 +5,13 @@ const adminSeeder= async()=>{
 
 //check whether admin exist or not
 
-const isAdminExists=await User.findOne({userEmail:"admin@gmail.com"})
+const isAdminExists=await User.findOne({userEmail:"recyclerags0@gmail.com"})
 if (!isAdminExists){
     await User.create({
-        userEmail:"admin@gmail.com",
-        userPassword:bcrypt.hashSync("admin",8),
+        userEmail:"recyclerags0@gmail.com",
+        userPassword:bcrypt.hashSync(process.env.ADMIN_PASSWORD,8),
         userPhoneNumber:"9821933744",
-        userName:"admin",
+        userFullName:"Dhruba Raj Parajuli",
         role:"admin"
     })
     console.log("admin seeded successfully")

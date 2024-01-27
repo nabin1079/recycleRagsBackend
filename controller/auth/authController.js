@@ -8,10 +8,10 @@ const sendEmail = require("../../services/sendEmail")
 const User = require("../../model/userModel")
 
 exports.registerUser= async (req,res)=>{
-    const {email,password,phoneNumber,username}=req.body
-    if(!email||!password||!phoneNumber){
+    const {email,password,phoneNumber,fullName,userLocation}=req.body
+    if(!email||!password||!phoneNumber||!fullName||!userLocation){
         return res.status(400).json({
-            message:"please provide email,password,phoneNumber"
+            message:"please provide email,password,phoneNumber,fullName,userLocation"
         })
     }   
     //check if that email already exist or not
@@ -28,7 +28,8 @@ exports.registerUser= async (req,res)=>{
         userEmail:email,
         userPhoneNumber:phoneNumber,
         userPassword:bcrypt.hashSync(password,8),
-        userName:username
+        userFullName:fullName,
+        userLocation
     })
     
     res.status(201).json({

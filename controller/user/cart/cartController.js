@@ -85,7 +85,7 @@ user.cart =   user.cart.filter(item=>item.product != productId) // [1,2,3] ==> 2
 exports.updateCartItems = async(req,res)=>{
     const userId = req.user.id
     const {productId} = req.params 
-    const {quantity} = req.body 
+    // const {quantity} = req.body 
 
     const user = await User.findById(userId)
     console.log(user)

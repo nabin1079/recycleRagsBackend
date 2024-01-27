@@ -6,7 +6,7 @@ const bcrypt = require("bcryptjs")
 //get my profile
 exports.getMyProfile = async(req,res)=>{
     const userId = req.user.id
-    const myProfile = await User.findById(userId)
+    const myProfile = await User.findById(userId).select("-userPassword -role -isOtpVerified -__v -_id")
 
     // send response
     res.status(200).json({

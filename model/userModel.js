@@ -46,7 +46,8 @@ cart : [{
         required : true
     },
     product : {type : Schema.Types.ObjectId, ref : "Product"}
-}]
+}],
+// product : {type : Schema.Types.ObjectId, ref : "Product"}   //added
 },{timestamps : true
 })
 const User = mongoose.model("User",userSchema)

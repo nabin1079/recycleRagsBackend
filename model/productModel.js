@@ -12,8 +12,8 @@ productDescription:{
     type: String,
     required : [true,"provideDescription must be provided"]
 },
-productStockQty:{
-    type:Number,
+productSize:{
+    type:String,
     required : [true,"provideDescription must be provided"]
 },
 productBoughtPrice:{
@@ -31,7 +31,7 @@ productStatus:{
 productImage:{
     type: String
 },
-user : {type:mongoose.Schema.Types.ObjectId, ref:'User'}
+user : {type:mongoose.Schema.Types.ObjectId, ref:'User'},
 },
 {timestamps : true
 })

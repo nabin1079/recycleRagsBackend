@@ -1,5 +1,6 @@
 const Product = require ("../../../model/productModel")
 const product = require("../../../model/productModel")
+require("../../../model/userModel")
 const fs = require("fs")
 
 exports.createProduct = async (req,res)=>{
@@ -10,10 +11,10 @@ exports.createProduct = async (req,res)=>{
     }else{
         filePath=req.file.filename
     }
-    const{productName,productDescription,productBoughtPrice,productSellingPrice,productStatus,productStockQty}=req.body
-    if(!productName||!productDescription||!productBoughtPrice||!productSellingPrice||!productStatus||!productStockQty){
+    const{productName,productDescription,productBoughtPrice,productSellingPrice,productStatus,productSize}=req.body
+    if(!productName||!productDescription||!productBoughtPrice||!productSellingPrice||!productStatus||!productSize){
         return res.status(400).json({
-            message: "please provide productName,productDescription,productPrice,productStatus,productStockQty"
+            message: "please provide productName,productDescription,productPrice,productStatus,productSize"
         })
     }
     //insert into Product collection/table
@@ -23,7 +24,7 @@ productDescription,
 productBoughtPrice,
 productSellingPrice,
 productStatus,
-productStockQty,
+productSize,
 productImage : process.env.BACKEND_URL + filePath,
 user:req.user.id
     })
@@ -33,7 +34,7 @@ user:req.user.id
 }
 
 exports.getProducts = async(req,res)=>{
-    const products = await product.find()
+    const products = await product.find().select(["-__v"])
     if (products.length ==0){
         res.status(400).json({
             message: "No product Found",
@@ -53,7 +54,10 @@ exports.getproduct = async(req,res)=>{
             message : "please provide id(productId)"
         })
     }
-    const product = await Product.find({_id : id})
+    const product = await Product.find({_id : id}).select(["-__v"]).populate(
+        {path:"user",
+        select:("userFullName userPhoneNumber userEmail -_id")
+}).select(["-__v","-_id","-userPassword","-role","-cart","-createdAt","-updatedAt","-isOtpVerified"])
     if(product.length==0){
         res.status(400).json({
             message:"No product found with that id",
@@ -132,10 +136,26 @@ message: "you don't have permission"
 exports.editProduct = async(req,res)=>{
 
     const {id} = req.params 
-      const {productName,productDescription,productBoughtPrice,productSellingPrice,productStatus,productStockQty} = req.body
-      if(!productName || !productDescription || !productBoughtPrice||!productSellingPrice || !productStatus || !productStockQty || !id){
+
+
+    // jun user le product create gareko ho, uslai matra permission dine edit ko 
+const userId = req.user.id
+const product = await Product.findById(id)
+const owner = product.user
+
+
+if (owner!=userId){
+    return res.status(400).json({
+message: "you don't have permission"
+
+    })
+}
+
+
+      const {productName,productDescription,productBoughtPrice,productSellingPrice,productStatus,productSize} = req.body
+      if(!productName || !productDescription || !productBoughtPrice||!productSellingPrice || !productStatus || !productSize || !id){
         return res.status(400).json({
-            message : "Please provide productName,productDescription,productPrice,productStatus,productStockQty,id"
+            message : "Please provide productName,productDescription,productBoughtPrice,productSellingPrice,productStatus,productSize,id"
         })
     }
 
@@ -167,7 +187,7 @@ exports.editProduct = async(req,res)=>{
         productBoughtPrice,
         productSellingPrice,
         productStatus,
-        productStockQty,
+        productSize,
         productImage : req.file && req.file.filename ? process.env.BACKEND_URL +  req.file.filename :  oldProductImage
     },{
         new : true,
